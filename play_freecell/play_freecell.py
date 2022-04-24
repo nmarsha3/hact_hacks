@@ -92,16 +92,15 @@ def try_move_1(f):
 
 # move 2: move a card from a freecell to the foundations
 def try_move_2(f):
-   for cell in f.freecells:
-      if cell[1] == "hearts" and int(cell[0]) == int(f.final_hearts[0] + 1):
-         f.move_from_cell(cell, f.final_hearts)
-         cell = []
-      elif cell[1] == "clubs" and int(cell[0]) == int(f.final_clubs[0] + 1):
-         f.move_from_cell(cell, f.final_clubs)
-      elif cell[1] == "diamonds" and int(cell[0]) == int(f.final_diamonds[0] + 1):
-         f.move_from_cell(cell, f.final_diamonds)
-      elif cell[1] == "spades" and int(cell[0]) == int(f.final_spades[0] + 1):
-         f.move_from_cell(cell, f.final_spades)
+   for card in f.freecells:
+      if card[1] == "hearts" and int(card[0]) == int(f.final_hearts[0] + 1):
+         f.move_from_cell(card, f.final_hearts)
+      elif card[1] == "clubs" and int(card[0]) == int(f.final_clubs[0] + 1):
+         f.move_from_cell(card, f.final_clubs)
+      elif card[1] == "diamonds" and int(card[0]) == int(f.final_diamonds[0] + 1):
+         f.move_from_cell(card, f.final_diamonds)
+      elif card[1] == "spades" and int(card[0]) == int(f.final_spades[0] + 1):
+         f.move_from_cell(card, f.final_spades)
 
 def try_move_3(f):
    pass

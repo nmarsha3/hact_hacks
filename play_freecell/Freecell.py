@@ -143,8 +143,11 @@ class Freecell:
          self.final_clubs.append(card)
       '''
 
-   def move_from_cell(cell, destination):
-      destination.append(cell)
+   def move_from_cell(self, card, destination):
+      if card in self.freecells:
+         self.freecells.remove(card)
+         destination.append(card)
+      
 
    def get_gamestate_from_exe(self):
       pass
