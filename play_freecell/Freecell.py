@@ -4,16 +4,18 @@ import random
 class Freecell:
 
    def __init__(self, card_file="cards.json"):
-      
+
       # Get card data and init cards
       with open(card_file) as f:
          data = json.load(f)
-      
+
       card_data = data["cards"]
       self.cards = [tuple(c) for c in card_data]
 
-      # init columes
-      self.column1 = list()
+      # init columns
+      self.columns = [[] for x in range(8)]
+
+      '''
       self.column2 = list()
       self.column3 = list()
       self.column4 = list()
@@ -21,6 +23,7 @@ class Freecell:
       self.column6 = list()
       self.column7 = list()
       self.column8 = list()
+      '''
 
       # init final piles
       self.final_hearts = list()
@@ -33,11 +36,16 @@ class Freecell:
 
    def build_random_board(self):
       ''' This method will be used before we know how to get gamestate from exe '''
-      
+
       # Shuffle the cards
       random.shuffle(self.cards)
-      
+
       # fill in each column
+
+      for column in self.columns:
+         for i in range(0,7):
+            column.append(self.cards[i])
+      '''
       for i in range(0, 7):
          self.column1.append(self.cards[i])
       for i in range(7, 14):
@@ -54,7 +62,7 @@ class Freecell:
          self.column7.append(self.cards[i])
       for i in range(46, 52):
          self.column8.append(self.cards[i])
-
+      '''
    def print_board(self):
       print("Freecells: ")
       print(self.freecells)
@@ -67,6 +75,13 @@ class Freecell:
       print("Final clubs: ")
       print(self.final_clubs)
       print()
+
+      i = 0
+      for column in self.columns:
+         print(i)
+         print(column)
+         i+=1
+      '''
       print("Column 1: ")
       print(self.column1)
       print("Column 2: ")
@@ -82,14 +97,16 @@ class Freecell:
       print("Column 7: ")
       print(self.column7)
       print("Column 8: ")
-      print(self.column8)
+      print(self.column8)'''
 
-  
-   def move(self, card, destination):
-      ''' move the specified card to the specified destnaiton'''
-      ''' CURRENTLY DOES NO CHECKS ON IF MOVE IS VALID OR NOT '''
+   def move(self, source, destination):
+      ''' move the specified card to the specified destnaiton'''      ''' CURRENTLY DOES NO CHECKS ON IF MOVE IS VALID OR NOT '''
       ''' CURRENTLY DOES NOT REMOVE CARD FROM CURRENT LOCATION '''
+
+      card = source.pop()
+      destination.append(card)
       
+      '''
       if destination == 1:
          self.column1.append(card)
       if destination == 2:
@@ -106,7 +123,7 @@ class Freecell:
          self.column7.append(card)
       if destination == 8:
          self.column8.append(card)
-      
+
       if destination == "freecell":
          self.freecell.add(card)
       if destination == "final_hearts":
@@ -117,6 +134,7 @@ class Freecell:
          self.final_spades.append(card)
       if destination == "final_clubs":
          self.final_clubs.append(card)
+      '''
 
    def get_gamestate_from_exe(self):
       pass
