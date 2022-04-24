@@ -32,7 +32,7 @@ class Freecell:
       self.final_clubs = list()
 
       # init free cells
-      self.freecells = set()
+      self.freecells = list()
 
    def build_random_board(self):
       ''' This method will be used before we know how to get gamestate from exe '''
