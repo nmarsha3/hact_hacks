@@ -9,7 +9,7 @@ card_codes = {}
 
 x = 0
 
-for i in ["A"] + list(map(str, range(2,11))) + ["J","Q","K"]:
+for i in range(1,14): #["A"] + list(map(str, range(2,11))) + ["J","Q","K"]:
     for j in ["clubs","diamonds","hearts","spades"]:
         card_codes[x] = (i,j)
         x += 1

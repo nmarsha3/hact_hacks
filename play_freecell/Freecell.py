@@ -1,5 +1,6 @@
 import json
 import random
+import CardStealer
 
 class Freecell:
 
@@ -32,7 +33,7 @@ class Freecell:
       self.final_clubs = list()
 
       # init free cells
-      self.freecells = set()
+      self.freecells = list()
 
    def build_random_board(self):
       ''' This method will be used before we know how to get gamestate from exe '''
@@ -143,8 +144,11 @@ class Freecell:
          self.final_clubs.append(card)
       '''
 
-   def move_from_cell(cell, destination):
-      destination.append(cell)
+   def move_from_cell(self, card, destination):
+      if card in self.freecells:
+         self.freecells.remove(card)
+         destination.append(card)
+      
 
    def get_gamestate_from_exe(self):
-      pass
+      self.columns = CardStealer.steal_cards()
