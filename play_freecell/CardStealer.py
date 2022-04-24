@@ -50,7 +50,7 @@ def steal_cards(pid=None):
             result = ReadProcessMemory(processHandle, address + j*4, buffer, bufferSize, byref(bytesRead))
 
             cardval = int.from_bytes(buffer.value, byteorder='big')
-            cards[i][j] = card_codes[str(cardval)]
+            cards[i][j] = tuple(card_codes[str(cardval)])
 
 
     CloseHandle(processHandle)
