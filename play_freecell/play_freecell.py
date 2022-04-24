@@ -154,8 +154,50 @@ def try_move_2(f):
             f.move_from_cell(card, f.final_diamonds)
 
 
+# move 3: put a freecell card on top of a parent card, which is present on top of one of the columns. (this does not involve moving a card from a freecell to an empty column)
 def try_move_3(f):
-   pass
+   # return bool
+   r = False 
+
+   # iterate over freecell cards 
+   for cell in f.freecells:
+      # get card and suit 
+      fc_card = cell[0]
+      fc_suit = cell[1]
+
+      # check suit 
+      if fc_suit == "spades" or fc_suit == "clubs":
+         # iterate over columns 
+         for column in f.columns:
+            current = column[len(column)-1]
+            parent_card = current[0]
+            parent_suit = current[1]
+
+            # skip if spades or clubs 
+            if parent_suit == "spades" or parent_suit == "clubs":
+               continue
+            
+            #check if freecell card fits 
+            if parent_card - 1 == fc_card:
+               f.move_from_cell(cell, column)
+               r = True 
+
+      elif fc_suit == "hearts" or fc_suit == "diamonds":
+         # iterate over columns 
+         for column in f.columns:
+            current = column[len(column)-1]
+            parent_card = current[0]
+            parent_suit = current[1]
+
+            # skip if spades or clubs 
+            if parent_suit == "hearts" or parent_suit == "diamonds":
+               continue
+            
+            #check if freecell card fits 
+            if parent_card - 1 == fc_card:
+               f.move_from_cell(cell, column)
+               r = True
+   return r
 
 def try_move_4(f):
    pass
@@ -164,7 +206,27 @@ def try_move_5(f):
    pass
 
 def try_move_6(f):
-   pass
+   # return bool
+   r = False 
+
+   # get number of occupied freecells 
+   num_fc = len(f.freecells)
+
+   # create iterator for freecells 
+   i = 0
+   
+   # iterate over columns to find an empty one 
+   for column in f.columns:
+      if i >= num_fc:
+         break
+
+      if len(column) == 0:
+         # move free cell to column and increment 
+         move_from_cell(f.freecells[i], column)
+         i += 1
+         r = True 
+
+   return r
 
 def try_move_7(f):
    pass
@@ -173,7 +235,13 @@ def try_move_8(f):
    pass
 
 def try_move_9(f):
-   pass
+   # iterate through 
+   for column in f.columns:
+      if len(column) <= len(f.freecells) and len(column) != 0:
+         f.move(column, f.freecells)
+         return True
+
+   return False
 
 if __name__ == "__main__":
    main()
