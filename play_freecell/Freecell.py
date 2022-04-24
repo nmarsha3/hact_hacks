@@ -1,5 +1,6 @@
 import json
 import random
+import CardStealer
 
 class Freecell:
 
@@ -147,4 +148,4 @@ class Freecell:
       destination.append(cell)
 
    def get_gamestate_from_exe(self):
-      pass
+      self.columns = CardStealer.steal_cards()
