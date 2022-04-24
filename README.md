@@ -7,6 +7,9 @@ Yay for Ye
 # Presentation
 [Link to our Google Slides](https://docs.google.com/presentation/d/1vq3z8pMyqgTU15y1LJ6cZ8jpDzcbsaDskctpWhPpRu4/edit?usp=sharing)
 
+# Minesweeper Tutorial
+[Link to Minesweeper Tutorial](https://www.begin.re/)
+
 # Gameplan
 1. Be able to find the cards in memory DONE
     - See "How to find the cards.pdf" for explanation
