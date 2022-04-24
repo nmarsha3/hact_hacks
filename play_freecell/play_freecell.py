@@ -10,11 +10,13 @@ def main():
    # here we will import the gamestate, for now we generate a random board
    f.build_random_board()
    # rig the board for testing purposes
-   f.columns[0][6] = ["2", "clubs"]
+   f.columns[0][6] = ["1", "hearts"]
 
    f.columns[3].pop()
-   f.final_hearts.append(["2", "hearts"])
-   f.columns[3].append(["3", "hearts"])
+   f.final_spades.append(("1", "spades"))
+   f.columns[3].append(("2", "hearts"))
+
+   f.freecells.append(("1", "diamonds"))
    f.print_board()
 
    find_best_move(f)
@@ -41,7 +43,50 @@ def find_best_move(f):
 
 # move 1: move a card from the top of a column to the foundation
 def try_move_1(f):
- 
+
+   for column in f.columns:
+      if len(column) > 0:
+         # current card we are on
+         card = column[-1]
+         # check if card is the next heart
+         if card[1] == "hearts":
+            if len(f.final_hearts) > 0 and int(card[0]) - 1 == int(f.final_hearts[-1][0]):
+               f.move(column, f.final_hearts)
+               return True
+            elif len(f.final_hearts) == 0 and card[0] == "1":
+               f.move(column, f.final_hearts)
+               return True
+
+         # check if card is the next clubs
+         if card[1] == "clubs":
+            if len(f.final_clubs) > 0 and int(card[0]) - 1 == int(f.final_clubs[-1][0]):
+               f.move(column, f.final_clubs)
+               return True
+            elif len(f.final_clubs) == 0 and card[0] == "1":
+               f.move(column, f.final_clubs)
+               return True
+         # check if card is the next spades
+         if card[1] == "spades":
+            if len(f.final_spades) > 0 and int(card[0]) - 1 == int(f.final_spades[-1][0]):
+               f.move(column, f.final_spades)
+               return True
+            elif len(f.final_spades) == 0 and card[0] == "1":
+               f.move(column, f.final_spades)
+               return True
+         # check if card is the next diamonds
+         if card[1] == "diamonds":
+            if len(f.final_diamonds) > 0 and int(card[0]) - 1 == int(f.final_diamonds[-1][0]):
+               f.move(column, f.final_diamonds)
+               return True
+            elif len(f.final_diamonds) == 0 and card[0] == "1":
+               f.move(column, f.final_diamonds)
+               return Trudiamonds
+      
+   return False
+         
+            
+   
+'''
    # hearts
    h_len = len(f.final_hearts)
    if h_len > 0:
@@ -88,19 +133,26 @@ def try_move_1(f):
       if column[len(column)-1] == c:
          f.move(column, f.final_spades)
          return True
-   return False
+   '''
 
 # move 2: move a card from a freecell to the foundations
 def try_move_2(f):
    for card in f.freecells:
-      if card[1] == "hearts" and int(card[0]) == int(f.final_hearts[0] + 1):
-         f.move_from_cell(card, f.final_hearts)
-      elif card[1] == "clubs" and int(card[0]) == int(f.final_clubs[0] + 1):
-         f.move_from_cell(card, f.final_clubs)
-      elif card[1] == "diamonds" and int(card[0]) == int(f.final_diamonds[0] + 1):
-         f.move_from_cell(card, f.final_diamonds)
-      elif card[1] == "spades" and int(card[0]) == int(f.final_spades[0] + 1):
-         f.move_from_cell(card, f.final_spades)
+      num = int(card[0])
+      suit = card[1]
+      if suit == "hearts":
+         length = len(f.final_hearts)
+         if length > 0 and (int(f.final_hearts[-1][0]) + 1 == num):
+            f.move_from_cell(card, f.final_hearts)
+         elif num == 1:
+            f.move_from_cell(card, f.final_hearts)
+      if suit == "diamonds":
+         length = len(f.final_diamonds)
+         if length > 0 and (int(f.final_diamonds[-1][0]) + 1 == num):
+            f.move_from_cell(card, f.final_diamonds)
+         elif num == 1:
+            f.move_from_cell(card, f.final_diamonds)
+
 
 def try_move_3(f):
    pass
