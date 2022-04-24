@@ -2,7 +2,10 @@
 Yay for Ye
 
 # Report
-https://docs.google.com/document/d/1HU5ERVY0qdzHWq1w_6UobclYCosUhNlzjAYawLPst2w/edit?usp=sharing
+[Link to our Report](https://docs.google.com/document/d/1HU5ERVY0qdzHWq1w_6UobclYCosUhNlzjAYawLPst2w/edit?usp=sharing)
+
+# Presentation
+[Link to our Google Slides](https://docs.google.com/presentation/d/1vq3z8pMyqgTU15y1LJ6cZ8jpDzcbsaDskctpWhPpRu4/edit?usp=sharing)
 
 # Gameplan
 1. Be able to find the cards in memory DONE
