@@ -103,8 +103,15 @@ class Freecell:
       ''' move the specified card to the specified destnaiton'''      ''' CURRENTLY DOES NO CHECKS ON IF MOVE IS VALID OR NOT '''
       ''' CURRENTLY DOES NOT REMOVE CARD FROM CURRENT LOCATION '''
 
+      print("MOVING CARD")
+      print("source")
+      print(source)
       card = source.pop()
+      print(source)
+      print("destination")
+      print(destination)
       destination.append(card)
+      print(destination)
       
       '''
       if destination == 1:
@@ -135,6 +142,9 @@ class Freecell:
       if destination == "final_clubs":
          self.final_clubs.append(card)
       '''
+
+   def move_from_cell(cell, destination):
+      destination.append(cell)
 
    def get_gamestate_from_exe(self):
       pass
