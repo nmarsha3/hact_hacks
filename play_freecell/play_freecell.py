@@ -10,20 +10,34 @@ def main():
    # here we will import the gamestate, for now we generate a random board
    f.build_random_board()
    # rig the board for testing purposes
-   f.columns[0][6] = ["1", "hearts"]
+   # testing move 1
+   f.columns[1][6] = ["1", "hearts"]
 
-   f.columns[3].pop()
+   f.columns[0].pop()
    f.final_spades.append(("1", "spades"))
-   f.columns[3].append(("2", "hearts"))
+   f.columns[0].append(("2", "hearts"))
 
+   # testing move 2
    f.freecells.append(("1", "diamonds"))
+
+   # testing move 3
+   f.freecells.append((4, "diamonds"))
+   f.columns[3].pop()
+   f.columns[3].append((5, "clubs"))
+   
+   # testing move 6
+   f.columns.append(list())
+   f.freecells.append(("8", "spades"))
+
+   # testing move 9
+   f.columns.append(list())
+   f.columns[9].append(("7", "clubs"))
+   
    f.print_board()
 
    find_best_move(f)
 
    f.print_board()
-
-   #f.print_board()
 
 
 def find_best_move(f):
@@ -31,14 +45,21 @@ def find_best_move(f):
    if(len(f.final_clubs) == 13 and len(f.final_diamonds) == 13 and len(f.final_hearts) == 13 and len(f.final_spades) == 13):
       return
 
-   # try move 1
    if try_move_1(f):
       find_best_move(f)
    elif try_move_2(f):
       find_best_move(f)
+   elif try_move_3(f):
+      find_best_move(f)
+   elif try_move_6(f):
+      find_best_move(f)
+   elif try_move_9(f):
+      find_best_move(f)
    else:
       print("Oh no! I'm stuck!")
    
+   # try_move_9(f)
+
    f.print_board()
 
 # move 1: move a card from the top of a column to the foundation
@@ -83,57 +104,6 @@ def try_move_1(f):
                return Trudiamonds
       
    return False
-         
-            
-   
-'''
-   # hearts
-   h_len = len(f.final_hearts)
-   if h_len > 0:
-      c = f.final_hearts[len(f.final_hearts)-1]
-      print(f.final_hearts[len(f.final_hearts)-1])
-      c[0] = str(int(c[0]) + 1)
-   else:
-      c = ["2", "hearts"]
-
-   print("looking for: ", c)
-   for column in f.columns:
-      if column[len(column)-1] == c:
-         f.move(column, f.final_hearts)
-         return True
-
-   # diamonds
-   if len(f.final_diamonds) > 0:
-      c = f.final_diamonds[len(f.final_diamonds)-1]
-   else:
-      c = ["2", "diamonds"]
-   for column in f.columns:
-      if column[len(column)-1] == c:
-         f.move(column, f.final_diamonds)
-         return True
-
-   # clubs
-   if len(f.final_clubs) > 0:
-      c = f.final_clubs[len(f.final_clubs)-1]
-   else:
-      c = ["2", "clubs"]
-   print("looking for: ", c)
-   for column in f.columns:
-      current_card = column[len(column)-1]
-      if current_card[0] == c[0] and current_card[1] == c[1]:
-         f.move(column, f.final_clubs)
-         return True
-
-   # spades
-   if len(f.final_spades) > 0:
-      c = f.final_spades[len(f.final_spades)-1]
-   else:
-      c = ["2", "spades"]
-   for column in f.columns:
-      if column[len(column)-1] == c:
-         f.move(column, f.final_spades)
-         return True
-   '''
 
 # move 2: move a card from a freecell to the foundations
 def try_move_2(f):
@@ -162,15 +132,17 @@ def try_move_3(f):
    # iterate over freecell cards 
    for cell in f.freecells:
       # get card and suit 
-      fc_card = cell[0]
+      fc_card = int(cell[0])
       fc_suit = cell[1]
 
       # check suit 
       if fc_suit == "spades" or fc_suit == "clubs":
          # iterate over columns 
          for column in f.columns:
+            if len(column) == 0:
+               continue
             current = column[len(column)-1]
-            parent_card = current[0]
+            parent_card = int(current[0])
             parent_suit = current[1]
 
             # skip if spades or clubs 
@@ -185,8 +157,11 @@ def try_move_3(f):
       elif fc_suit == "hearts" or fc_suit == "diamonds":
          # iterate over columns 
          for column in f.columns:
+
+            if len(column) == 0:
+               continue
             current = column[len(column)-1]
-            parent_card = current[0]
+            parent_card = int(current[0])
             parent_suit = current[1]
 
             # skip if spades or clubs 
@@ -210,20 +185,20 @@ def try_move_6(f):
    r = False 
 
    # get number of occupied freecells 
-   num_fc = len(f.freecells)
+   # num_fc = len(f.freecells)
 
    # create iterator for freecells 
-   i = 0
+   # i = 0
    
    # iterate over columns to find an empty one 
    for column in f.columns:
-      if i >= num_fc:
+      if len(f.freecells) == 0:
          break
 
       if len(column) == 0:
          # move free cell to column and increment 
-         move_from_cell(f.freecells[i], column)
-         i += 1
+         f.move_from_cell(f.freecells[0], column)
+         # i += 1
          r = True 
 
    return r
