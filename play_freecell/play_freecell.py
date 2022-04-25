@@ -7,6 +7,10 @@ def main():
    # Create game object
    f = Freecell()
 
+   f.get_gamestate_from_exe()
+
+def test_cases(f):
+
    # here we will import the gamestate, for now we generate a random board
    f.build_random_board()
    # rig the board for testing purposes
