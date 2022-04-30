@@ -7,7 +7,15 @@ def main():
    # Create game object
    f = Freecell()
 
+   # loads cards from memory, assumes process is already running!!!!
    f.get_gamestate_from_exe()
+
+   # print the start state
+   f.print_board()
+
+   # recursively finds the next best move
+   find_best_move(f)
+
 
 def test_cases(f):
 
@@ -51,6 +59,8 @@ def find_best_move(f):
 
    if try_move_1(f):
       find_best_move(f)
+   elif try_sequence_move(f):
+      find_best_move(f)
    elif try_move_2(f):
       find_best_move(f)
    elif try_move_3(f):
@@ -59,12 +69,37 @@ def find_best_move(f):
       find_best_move(f)
    elif try_move_9(f):
       find_best_move(f)
+   elif move_to_cell(f):
+      find_best_move(f)
    else:
       print("Oh no! I'm stuck!")
    
-   # try_move_9(f)
-
    f.print_board()
+
+def can_stack(source_card, dest_card):
+   if source_card[0] == dest_card[0] - 1:
+      if (source_card[1] == "diamonds" or source_card[1] == "hearts") and (dest_card[1] == "clubs" or dest_card[1] == "spades"):
+         return True
+      if (source_card[1] == "clubs" or source_card[1] == "spades") and (dest_card[1] == "diamonds" or dest_card[1] == "hearts"):
+          return True
+   return False
+
+def move_to_cell(f):
+   for column in f.columns:
+      if len(column) == 0:
+         continue
+      else:
+         f.move(column, f.freecells)
+
+def try_sequence_move(f):
+   for source_col in f.columns:
+      if len(source_col) == 0:
+         continue
+      for dest_col in f.columns:
+         if len(dest_col) == 0:
+            continue
+         if can_stack(source_col[-1], dest_col[-1]):
+            f.move(source_col, dest_col)
 
 # move 1: move a card from the top of a column to the foundation
 def try_move_1(f):
@@ -87,7 +122,7 @@ def try_move_1(f):
             if len(f.final_clubs) > 0 and int(card[0]) - 1 == int(f.final_clubs[-1][0]):
                f.move(column, f.final_clubs)
                return True
-            elif len(f.final_clubs) == 0 and card[0] == "1":
+            elif len(f.final_clubs) == 0 and card[0] == 1:
                f.move(column, f.final_clubs)
                return True
          # check if card is the next spades
@@ -95,7 +130,7 @@ def try_move_1(f):
             if len(f.final_spades) > 0 and int(card[0]) - 1 == int(f.final_spades[-1][0]):
                f.move(column, f.final_spades)
                return True
-            elif len(f.final_spades) == 0 and card[0] == "1":
+            elif len(f.final_spades) == 0 and card[0] == 1:
                f.move(column, f.final_spades)
                return True
          # check if card is the next diamonds
@@ -103,9 +138,9 @@ def try_move_1(f):
             if len(f.final_diamonds) > 0 and int(card[0]) - 1 == int(f.final_diamonds[-1][0]):
                f.move(column, f.final_diamonds)
                return True
-            elif len(f.final_diamonds) == 0 and card[0] == "1":
+            elif len(f.final_diamonds) == 0 and card[0] == 1:
                f.move(column, f.final_diamonds)
-               return Trudiamonds
+               return True
       
    return False
 
@@ -217,7 +252,7 @@ def try_move_9(f):
    # iterate through 
    for column in f.columns:
       if len(column) <= len(f.freecells) and len(column) != 0:
-         f.move(column, f.freecells)
+         f.move_to_cell(column, f.freecells)
          return True
 
    return False

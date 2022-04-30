@@ -57,14 +57,28 @@ class Freecell:
          i+=1
 
    def move(self, source, destination):
-      ''' move the specified card to the specified destnaiton'''      ''' CURRENTLY DOES NO CHECKS ON IF MOVE IS VALID OR NOT '''
-      ''' CURRENTLY DOES NOT REMOVE CARD FROM CURRENT LOCATION '''
-     
-      print("source: ", source)
-      print("destination: ", destination)
+      ''' move the specified card to the specified destnaiton'''      
+      
+      # print("source: ", source)
+      # print("destination: ", destination)
+      
+      print("Recommended Move: ")
+      print("move the ", source[-1])
+      if len(destination) > 0:
+         print("onto the ", destination[-1])
+      else:
+         print("onto the foundation pile")
+      ans = input("did you complete the recommended move? (Y): ")
       destination.append(source.pop())
-      print("source: ", source)
-      print("destination: ", destination)
+      
+   def move_to_cell(self, source, destination):
+      print("Recommended Move: ")
+      print("move the ", source[-1])
+      print("onto the freecells")
+      # else:
+      #    print("onto the foundation pile")
+      ans = input("did you complete the recommended move? (Y): ")
+      destination.append(source.pop())
       
 
    def move_from_cell(self, card, destination):
