@@ -213,11 +213,100 @@ def try_move_3(f):
                r = True
    return r
 
+# move a sequence of cards from the top of a column to a parent card on a different column
 def try_move_4(f):
-   pass
+   # iterate over cols
+   for c in f.columns:
+      # get to first card
+      first = 0
+      seq = first
 
+      # set first cards 
+      pre_card = int(c[first][0])
+      pre_suit = c[first][1]
+
+      # iterate over cards in col to see if they are a seq
+      for i in range(1, len(c), 1):
+         cur_card = int(c[i][0])
+         cur_suit = c[i][1]
+
+         # check if the cards break the color pattern 
+         if (cur_suit == "spades" or cur_suit == "clubs") and (pre_suit == "spades" or pre_suit == "clubs"):
+            break
+         if (cur_suit == "hearts" or cur_suit == "diamonds") and (pre_suit == "hearts" or pre_suit == "diamonds"):
+            break
+
+         # check to see if cur_card is not one greater than pre_card
+         if cur_card != (pre_card - 1):
+            break
+         
+         # reset pre_card and pre_suit
+         pre_card = cur_card
+         pre_suit = cur_suit
+
+         # decrement seq
+         seq += 1
+
+      # check to see if seq is the length of the full col 
+      if seq == (len(c) - 1):
+         # find a parent card for seq
+         top = c[seq]
+         for dest in f.columns:
+            bot = dest[-1]
+            stack = can_stack(top, bot)
+            # if we can stack then move the seq
+            if stack:
+               # TODO: move the sequence to parent card of new col
+               move_seq(c, 0, dest)
+               return True
+   
+   return False
+
+# move a sequence of cards from the top of a column to an empty stack
 def try_move_5(f):
-   pass
+   # iterate over cols
+   for c in f.columns:
+      # get to first card
+      first = 0
+      seq = first
+
+      # set first cards 
+      pre_card = int(c[first][0])
+      pre_suit = c[first][1]
+
+      # iterate over cards in col to see if they are a seq
+      for i in range(1, len(c), 1):
+         cur_card = int(c[i][0])
+         cur_suit = c[i][1]
+
+         # check if the cards break the color pattern 
+         if (cur_suit == "spades" or cur_suit == "clubs") and (pre_suit == "spades" or pre_suit == "clubs"):
+            break
+         if (cur_suit == "hearts" or cur_suit == "diamonds") and (pre_suit == "hearts" or pre_suit == "diamonds"):
+            break
+
+         # check to see if cur_card is not one greater than pre_card
+         if cur_card != (pre_card - 1):
+            break
+         
+         # reset pre_card and pre_suit
+         pre_card = cur_card
+         pre_suit = cur_suit
+
+         # decrement seq
+         seq += 1
+
+      # check to see if seq is the length of the full col 
+      if seq == (len(c) - 1):
+         # find an empty column to move card to
+         for dest in f.columns:
+            if len(dest) == 0:
+               # TODO: move the sequence to parent card of new col
+               move_seq(c, 0, dest)
+               return True
+   
+   return False
+      
 
 def try_move_6(f):
    # return bool
@@ -242,8 +331,57 @@ def try_move_6(f):
 
    return r
 
+# move a sequence of cards that is already on top of a valid parent to a different parent
 def try_move_7(f):
-   pass
+   # iterate over cols
+   for c in f.columns:
+      # get to first card
+      first = len(c) - 1
+      pre_card = int(c[first][0])
+      pre_suit = c[first][1]
+
+      # set sequence
+      seq = first
+
+      # iterate over cards in col to find seq
+      for i in range((first - 1), -1, -1):
+         cur_card = int(c[i][0])
+         cur_suit = c[i][1]
+
+         # check if the cards break the color pattern 
+         if (cur_suit == "spades" or cur_suit == "clubs") and (pre_suit == "spades" or pre_suit == "clubs"):
+            break
+         if (cur_suit == "hearts" or cur_suit == "diamonds") and (pre_suit == "hearts" or pre_suit == "diamonds"):
+            break
+
+         # check to see if cur_card is not one greater than pre_card
+         if cur_card != (pre_card + 1):
+            break
+         
+         # reset pre_card and pre_suit
+         pre_card = cur_card
+         pre_suit = cur_suit
+
+         # decrement seq
+         seq -= 1
+
+      # check to see if seq != first, if != then a seq has been found 
+      if seq != first:
+         # find a parent to parent column
+         seq_final = seq
+         while (first - seq_final) >= 2:
+            top = c[seq_final]
+            for dest in f.columns:
+               bot = dest[-1]
+               stack = can_stack(top, bot)
+               # if we can stack then move the seq
+               if stack:
+                  # TODO: move the sequence to parent card of new col
+                  move_seq(c, seq_final, dest)
+                  return True
+            seq_final += 1
+   
+   return False
 
 def try_move_8(f):
    pass
