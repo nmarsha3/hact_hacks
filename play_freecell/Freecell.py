@@ -70,6 +70,12 @@ class Freecell:
          print("onto the foundation pile")
       ans = input("did you complete the recommended move? (Y): ")
       destination.append(source.pop())
+
+   # beginning with source[source_index] until source[-1] append to destination[-1]
+   def move_seq(self, source, source_index, destintation):
+      for i in range(source_index, len(source), 1):
+         destination.append(source.pop(i))
+
       
    def move_to_cell(self, source, destination):
       print("Recommended Move: ")
