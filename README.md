@@ -1,8 +1,8 @@
 # hact_hacks
 Yay for Ye
 
-# Report
-[Link to our Report](https://docs.google.com/document/d/1HU5ERVY0qdzHWq1w_6UobclYCosUhNlzjAYawLPst2w/edit?usp=sharing)
+# Submission Folder
+[Link to our Google Drive Folder](https://drive.google.com/drive/folders/12oUe6Kj26X3ABUaW5ozf9dUtzn-DdZCR?usp=sharing)
 
 # Presentation
 [Link to our Google Slides](https://docs.google.com/presentation/d/1vq3z8pMyqgTU15y1LJ6cZ8jpDzcbsaDskctpWhPpRu4/edit?usp=sharing)
