@@ -72,9 +72,18 @@ class Freecell:
       destination.append(source.pop())
 
    # beginning with source[source_index] until source[-1] append to destination[-1]
-   def move_seq(self, source, source_index, destintation):
+   def move_seq(self, source, source_index, destination):
+      print("Recommended Move: ")
+      print("move the ", source[-1])
+      if len(destination) > 0:
+         print("onto the ", destination[-1])
+      else:
+         print("onto the foundation pile")
+      ans = input("did you complete the recommended move? (Y): ")
       for i in range(source_index, len(source), 1):
-         destination.append(source.pop(i))
+         print("index: ", source_index)
+         print("i: ", i)
+         destination.append(source.pop(source_index))
 
       
    def move_to_cell(self, source, destination):

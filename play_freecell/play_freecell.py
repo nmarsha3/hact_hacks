@@ -9,17 +9,8 @@ def main():
    f = Freecell()
 
    # loads cards from memory, assumes process is already running!!!!
-   # f.get_gamestate_from_exe()
-
-   # test move 8
-   f.build_random_board()
-   f.columns[0].pop()
-   f.columns[0].pop()
-   f.columns[0].pop()
-   f.columns[0].append([1, "hearts"])
-   f.columns[0].append([3, "clubs"])
-   f.columns[0].append([6, "diamonds"])
-
+   f.get_gamestate_from_exe()
+   # f.build_random_board()
 
    # print the start state
    f.print_board()
@@ -67,35 +58,31 @@ def find_best_move(f):
    if(len(f.final_clubs) == 13 and len(f.final_diamonds) == 13 and len(f.final_hearts) == 13 and len(f.final_spades) == 13):
       return
    
-   if try_move_8(f):
+   if try_move_1(f):
+      find_best_move(f)
+   elif try_move_2(f):
+      find_best_move(f)
+   elif try_move_3(f):
+      find_best_move(f)
+   elif try_move_4(f):
+      find_best_move(f)
+   elif try_move_5(f):
+      find_best_move(f)
+   elif move_one_card(f):
+      find_best_move(f)
+   elif try_move_6(f):
+      find_best_move(f)
+   elif try_move_7(f):
+      find_best_move(f)
+   elif try_move_8(f):
+      find_best_move(f)
+   elif try_move_9(f):
       find_best_move(f)
    else:
       print("Oh no! I'm stuck!")
-      f.print_board()
-      return
-
-   # if try_move_1(f):
-   #    find_best_move(f)
-   # elif try_move_2(f):
-   #    find_best_move(f)
-   # elif try_move_3(f):
-   #    find_best_move(f)
-   # elif try_move_6(f):
-   #    find_best_move(f)
-   # elif try_move_8(f):
-   #    find_best_move(f)
-   # elif try_move_9(f):
-   #    find_best_move(f)
-   # elif move_to_cell(f):
-   #    find_best_move(f)
-   # else:
-   #    print("Oh no! I'm stuck!")
    
-   # f.print_board()
 
 def can_stack(source_card, dest_card):
-   print(source_card)
-   print(dest_card)
    if source_card[0] == int(dest_card[0]) - 1:
       if (source_card[1] == "diamonds" or source_card[1] == "hearts") and (dest_card[1] == "clubs" or dest_card[1] == "spades"):
          return True
@@ -115,7 +102,8 @@ def move_to_cell(f):
          return True
    return False
 
-def try_sequence_move(f):
+def move_one_card(f):
+   print("TRYING MOVE ONE CARD")
    for source_col in f.columns:
       if len(source_col) == 0:
          continue
@@ -123,11 +111,12 @@ def try_sequence_move(f):
          if len(dest_col) == 0:
             continue
          if can_stack(source_col[-1], dest_col[-1]):
-            f.move(source_col, dest_col)
+            if not (len(source_col) > 1 and can_stack(source_col[-1], source_col[-2])):
+               f.move(source_col, dest_col)
 
 # move 1: move a card from the top of a column to the foundation
 def try_move_1(f):
-
+   print("TRYING MOVE 1")
    for column in f.columns:
       if len(column) > 0:
          # current card we are on
@@ -137,7 +126,7 @@ def try_move_1(f):
             if len(f.final_hearts) > 0 and int(card[0]) - 1 == int(f.final_hearts[-1][0]):
                f.move(column, f.final_hearts)
                return True
-            elif len(f.final_hearts) == 0 and card[0] == "1":
+            elif len(f.final_hearts) == 0 and card[0] == 1:
                f.move(column, f.final_hearts)
                return True
 
@@ -170,6 +159,7 @@ def try_move_1(f):
 
 # move 2: move a card from a freecell to the foundations
 def try_move_2(f):
+   print("TRYING MOVE 2")
    for card in f.freecells:
       num = int(card[0])
       suit = card[1]
@@ -188,6 +178,7 @@ def try_move_2(f):
 
 # move 3: put a freecell card on top of a parent card, which is present on top of one of the columns. (this does not involve moving a card from a freecell to an empty column)
 def try_move_3(f):
+   print("TRYING MOVE 3")
    # return bool
    r = False 
 
@@ -238,20 +229,26 @@ def try_move_3(f):
 
 # move a sequence of cards from the top of a column to a parent card on a different column
 def try_move_4(f):
+   print("TRYING MOVE 4")
    # iterate over cols
    for c in f.columns:
+      # check if c is empty 
+      if len(c) == 0:
+         continue
       # get to first card
       first = 0
       seq = first
 
-      # set first cards 
-      pre_card = int(c[first][0])
-      pre_suit = c[first][1]
+      # set first cards
+      card = c[0]
+      pre_card = int(card[0])
+      pre_suit = card[1]
 
       # iterate over cards in col to see if they are a seq
       for i in range(1, len(c), 1):
-         cur_card = int(c[i][0])
-         cur_suit = c[i][1]
+         cur = c[i]
+         cur_card = int(cur[0])
+         cur_suit = c[1]
 
          # check if the cards break the color pattern 
          if (cur_suit == "spades" or cur_suit == "clubs") and (pre_suit == "spades" or pre_suit == "clubs"):
@@ -275,32 +272,40 @@ def try_move_4(f):
          # find a parent card for seq
          top = c[seq]
          for dest in f.columns:
+            if len(dest) == 0:
+               continue
             bot = dest[-1]
             stack = can_stack(top, bot)
             # if we can stack then move the seq
             if stack:
                # TODO: move the sequence to parent card of new col
-               move_seq(c, 0, dest)
+               f.move_seq(c, 0, dest)
                return True
    
    return False
 
 # move a sequence of cards from the top of a column to an empty stack
 def try_move_5(f):
+   print("TRYING MOVE 5")
    # iterate over cols
    for c in f.columns:
+      # check if c is empty
+      if len(c) == 0:
+         continue
       # get to first card
       first = 0
       seq = first
 
       # set first cards 
-      pre_card = int(c[first][0])
-      pre_suit = c[first][1]
+      card = c[0]
+      pre_card = int(card[0])
+      pre_suit = card[1]
 
       # iterate over cards in col to see if they are a seq
       for i in range(1, len(c), 1):
-         cur_card = int(c[i][0])
-         cur_suit = c[i][1]
+         cur = c[i]
+         cur_card = int(cur[0])
+         cur_suit = c[1]
 
          # check if the cards break the color pattern 
          if (cur_suit == "spades" or cur_suit == "clubs") and (pre_suit == "spades" or pre_suit == "clubs"):
@@ -325,13 +330,14 @@ def try_move_5(f):
          for dest in f.columns:
             if len(dest) == 0:
                # TODO: move the sequence to parent card of new col
-               move_seq(c, 0, dest)
+               f.move_seq(c, 0, dest)
                return True
    
    return False
       
 
 def try_move_6(f):
+   print("TRYING MOVE 6")
    # return bool
    r = False 
 
@@ -356,12 +362,18 @@ def try_move_6(f):
 
 # move a sequence of cards that is already on top of a valid parent to a different parent
 def try_move_7(f):
+   print("TRYING MOVE 7")
    # iterate over cols
    for c in f.columns:
+      # check if c is empty
+      if len(c) == 0:
+         continue
+
       # get to first card
       first = len(c) - 1
-      pre_card = int(c[first][0])
-      pre_suit = c[first][1]
+      pre = c[first]
+      pre_card = int(pre[0])
+      pre_suit = pre[1]
 
       # set sequence
       seq = first
@@ -395,12 +407,14 @@ def try_move_7(f):
          while (first - seq_final) >= 2:
             top = c[seq_final]
             for dest in f.columns:
+               if len(dest) == 0:
+                  continue
                bot = dest[-1]
                stack = can_stack(top, bot)
                # if we can stack then move the seq
                if stack:
                   # TODO: move the sequence to parent card of new col
-                  move_seq(c, seq_final, dest)
+                  f.move_seq(c, seq_final, dest)
                   return True
             seq_final += 1
    
@@ -408,20 +422,22 @@ def try_move_7(f):
 
 # move 8: move a cards that is hidden under some cards, into the foundations, by moving cards above it to vacant freecells and columns. 
 def try_move_8(f):
-   if len(f.final_hearts) == 0:
-      next = [1, "hearts"]
-   else:
-      next = [f.final_hearts[-1] + 1, "hearts"]
-   
+   print("TRYING MOVE 8")
+   something_moved = False
+
+   # clubs
+   next = [len(f.final_clubs) + 1, 'clubs']
+
    for col in f.columns:
-      if next not in col:
+      if tuple(next) not in col:
+         continue
+      if len(col) == 0:
          continue
       # try to uncover
       # iterate over all the cards in between the top of the col and next
-      flag = False
       col_move = False
       cell_move = False
-      while next != col[-1]:
+      while tuple(next) != col[-1]:
          # check if a parent is free on another column
          for col2 in f.columns:
             if len(col2) == 0:
@@ -429,120 +445,116 @@ def try_move_8(f):
                continue
             if can_stack(col[-1], col2[-1]):
                f.move(col, col2)
-               print("MOVING PARENT TO NEW COLUMN")
                col_move = True
+               something_moved = True
                continue
             else:
                col_move = False
          # check if a freecell is open
-         if len(f.freecells) is not 4:
+         if len(f.freecells) < 4:
             f.move_to_cell(col, f.freecells)
-            print("MOVING INTO FREECELLS")
             cell_move = True
+            something_moved = True
          else:
             cell_move = False
-         
          # if the card could not be moved to either column 
          if not cell_move and not col_move:
-            return False
+            break
 
-      if next == col[-1]:
-         f.move(col, f.final_hearts)
-         
-
-   if len(f.final_diamonds) == 0:
-      next_diamonds = [1, "diamonds"]
-   else:
-      next_diamonds = [(f.final_diamonds[-1] + 1), "diamonds"]
-
-   for col in f.columns:
-      if next not in col:
-         continue
-      # try to uncover
-      # iterate over all the cards in between the top of the col and next
-      flag = False
-      col_move = False
-      cell_move = False
-      while next != col[-1]:
-         # check if a parent is free on another column
-         for col2 in f.columns:
-            if len(col2) == 0:
-               col_move = False
-               continue
-            if can_stack(col[-1], col2[-1]):
-               f.move(col, col2)
-               print("MOVING PARENT TO NEW COLUMN")
-               col_move = True
-               continue
-            else:
-               col_move = False
-         # check if a freecell is open
-         if len(f.freecells) is not 4:
-            f.move_to_cell(col, f.freecells)
-            print("MOVING INTO FREECELLS")
-            cell_move = True
-         else:
-            cell_move = False
-         
-         # if the card could not be moved to either column 
-         if not cell_move and not col_move:
-            return False
-
-      if next == col[-1]:
-         f.move(col, f.final_diamonds)
-
-   if len(f.final_clubs) == 0:
-      next_clubs = [1, "clubs"]
-   else:
-      next_clubs = [f.final_dclubs[-1] + 1, "clubs"]
-
-   for col in f.columns:
-      if next not in col:
-         continue
-      # try to uncover
-      # iterate over all the cards in between the top of the col and next
-      flag = False
-      col_move = False
-      cell_move = False
-      while next != col[-1]:
-         # check if a parent is free on another column
-         for col2 in f.columns:
-            if len(col2) == 0:
-               col_move = False
-               continue
-            if can_stack(col[-1], col2[-1]):
-               f.move(col, col2)
-               print("MOVING PARENT TO NEW COLUMN")
-               col_move = True
-               continue
-            else:
-               col_move = False
-         # check if a freecell is open
-         if len(f.freecells) is not 4:
-            f.move_to_cell(col, f.freecells)
-            print("MOVING INTO FREECELLS")
-            cell_move = True
-         else:
-            cell_move = False
-         
-         # if the card could not be moved to either column 
-         if not cell_move and not col_move:
-            return False
-
-      if next == col[-1]:
+      if tuple(next) == col[-1]:
          f.move(col, f.final_clubs)
+         something_moved = True
+         return True
          
-   if len(f.final_spades) == 0:
-      next_spades = [1, "spades"]
-   else:
-      next_spades = [f.final_spades[-1] + 1, "spades"]
+
+   # diamonds
+   next = [len(f.final_diamonds) + 1, 'diamonds']
+
+   for col in f.columns:
+      if tuple(next) not in col:
+         continue
+      # try to uncover
+      # iterate over all the cards in between the top of the col and next
+      col_move = False
+      cell_move = False
+      while tuple(next) != col[-1]:
+         # check if a parent is free on another column
+         for col2 in f.columns:
+            if len(col2) == 0:
+               col_move = False
+               continue
+            if can_stack(col[-1], col2[-1]):
+               f.move(col, col2)
+               col_move = True
+               something_moved = True
+               continue
+            else:
+               col_move = False
+         # check if a freecell is open
+         if len(f.freecells) < 4:
+            f.move_to_cell(col, f.freecells)
+            something_moved = True
+            cell_move = True
+         else:
+            cell_move = False
+         # if the card could not be moved to either column 
+         if not cell_move and not col_move:
+            break
+
+      if tuple(next) == col[-1]:
+         f.move(col, f.final_diamonds)
+         something_moved = True
+         return True
+         
+
+
+   # hearts
+   next = [len(f.final_hearts) + 1, 'hearts']
+
+   for col in f.columns:
+      if tuple(next) not in col:
+         continue
+      # try to uncover
+      # iterate over all the cards in between the top of the col and next
+      col_move = False
+      cell_move = False
+      while tuple(next) != col[-1]:
+         # check if a parent is free on another column
+         for col2 in f.columns:
+            if len(col2) == 0:
+               col_move = False
+               continue
+            if can_stack(col[-1], col2[-1]):
+               f.move(col, col2)
+               something_moved = True
+               col_move = True
+               continue
+            else:
+               col_move = False
+         # check if a freecell is open
+         if len(f.freecells) < 4:
+            f.move_to_cell(col, f.freecells)
+            cell_move = True
+            something_moved = True
+         else:
+            cell_move = False
+         # if the card could not be moved to either column 
+         if not cell_move and not col_move:
+            break
+
+      if tuple(next) == col[-1]:
+         f.move(col, f.final_hearts)
+         something_moved = True
+         return True
+
+   # spades
+   next = tuple([len(f.final_spades) + 1, 'spades'])
    
    for col in f.columns:
       if next not in col:
          continue
       # try to uncover
       # iterate over all the cards in between the top of the col and next
-      flag = False
       col_move = False
       cell_move = False
       while next != col[-1]:
@@ -553,33 +565,37 @@ def try_move_8(f):
                continue
             if can_stack(col[-1], col2[-1]):
                f.move(col, col2)
-               print("MOVING PARENT TO NEW COLUMN")
+               something_moved = True
                col_move = True
                continue
             else:
                col_move = False
          # check if a freecell is open
-         if len(f.freecells) is not 4:
+         if len(f.freecells) < 4:
             f.move_to_cell(col, f.freecells)
-            print("MOVING INTO FREECELLS")
+            something_moved = True
             cell_move = True
          else:
             cell_move = False
          
          # if the card could not be moved to either column 
          if not cell_move and not col_move:
-            return False
+            break
 
       if next == col[-1]:
          f.move(col, f.final_spades)
+         something_moved = True
+         return True
    
+   return something_moved
    
 
 # i think this needs to iterate over all the cards in the column, currently it only moves one card to the freecells
 def try_move_9(f):
+   print("TRYING MOVE 9")
    # iterate through 
    for column in f.columns:
-      if len(column) <= len(f.freecells) and len(column) != 0:
+      if len(column) <= (4 - len(f.freecells)) and len(column) != 0:
          f.move_to_cell(column, f.freecells)
          return True
 
